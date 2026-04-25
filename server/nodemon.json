@@ -1,0 +1,21 @@
+{
+    "watch": [
+        "server.js",
+        "config",
+        "controllers",
+        "models",
+        "routes",
+        "middleware",
+        "utils"
+    ],
+    "ext": "js",
+    "ignore": [
+        "node_modules"
+    ],
+    "exec": "node",
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "delay": 500,
+    "verbose": true
+}
