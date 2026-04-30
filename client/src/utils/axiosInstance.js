@@ -1,8 +1,11 @@
 import axios from 'axios'
 
 // Create axios instance with base URL
+// In development: baseURL = 'http://localhost:5000'
+// In production: baseURL = 'https://study-space-server.onrender.com'
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+    withCredentials: true, // Important for sending cookies with requests
 })
 
 // ── Request interceptor ───────────────────────────────────────
