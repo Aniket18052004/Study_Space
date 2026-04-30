@@ -84,7 +84,7 @@ const authSlice = createSlice({
 
     initialState: {
         // Load from localStorage so user stays logged in on refresh
-        user: JSON.parse(localStorage.getItem('user')) || null,
+        user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
         token: localStorage.getItem('token') || null,
         loading: false,
         error: null,
