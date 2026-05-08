@@ -25,14 +25,18 @@ const AuthCallback = () => {
                     return
                 }
 
-                // Save token to localStorage first
-                // so axiosInstance can attach it to the next request
+                const encodedUser = searchParams.get('user')
+                let user = null
+
                 localStorage.setItem('token', token)
 
-                // Fetch user profile using the token
-                const { data: user } = await api.get('/auth/me')
+                if (encodedUser) {
+                    user = JSON.parse(decodeURIComponent(encodedUser))
+                } else {
+                    const { data } = await api.get('/auth/me')
+                    user = data
+                }
 
-                // Save user to localStorage
                 localStorage.setItem('user', JSON.stringify(user))
 
                 // Update Redux state

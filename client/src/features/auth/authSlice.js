@@ -1,6 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../../utils/axiosInstance'
 
+const loadStoredAuth = () => {
+    const token = localStorage.getItem('token')
+    const storedUser = localStorage.getItem('user')
+
+    if (!token || !storedUser) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        return { token: null, user: null }
+    }
+
+    try {
+        return { token, user: JSON.parse(storedUser) }
+    } catch {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        return { token: null, user: null }
+    }
+}
+
+const storedAuth = loadStoredAuth()
+
 // ─────────────────────────────────────────────
 // Async thunk — Login user
 // ─────────────────────────────────────────────
@@ -17,7 +38,9 @@ export const loginUser = createAsyncThunk(
             return data
         } catch (err) {
             return rejectWithValue(
-                err.response?.data?.message || 'Login failed. Please try again.'
+                err.response?.data?.message ||
+                err.message ||
+                'Login failed. Please try again.'
             )
         }
     }
@@ -53,7 +76,9 @@ export const registerUser = createAsyncThunk(
             return data
         } catch (err) {
             return rejectWithValue(
-                err.response?.data?.message || 'Registration failed. Please try again.'
+                err.response?.data?.message ||
+                err.message ||
+                'Registration failed. Please try again.'
             )
         }
     }
@@ -69,9 +94,13 @@ export const fetchMe = createAsyncThunk(
             const { data } = await api.get('/auth/me')
             return data
         } catch (err) {
-            return rejectWithValue(
-                err.response?.data?.message || 'Failed to fetch user.'
-            )
+            return rejectWithValue({
+                status: err.response?.status,
+                message:
+                    err.response?.data?.message ||
+                    err.message ||
+                    'Failed to fetch user.',
+            })
         }
     }
 )
@@ -84,8 +113,8 @@ const authSlice = createSlice({
 
     initialState: {
         // Load from localStorage so user stays logged in on refresh
-        user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
-        token: localStorage.getItem('token') || null,
+        user: storedAuth.user,
+        token: storedAuth.token,
         loading: false,
         error: null,
     },
@@ -158,15 +187,19 @@ const authSlice = createSlice({
         // ── FetchMe cases ──────────────────────────
         builder
             .addCase(fetchMe.pending, (state) => {
-                state.loading = true
+                state.error = null
             })
             .addCase(fetchMe.fulfilled, (state, action) => {
-                state.loading = false
                 state.user = action.payload
                 localStorage.setItem('user', JSON.stringify(action.payload))
             })
-            .addCase(fetchMe.rejected, (state) => {
-                state.loading = false
+            .addCase(fetchMe.rejected, (state, action) => {
+                if (action.payload?.status === 401) {
+                    state.user = null
+                    state.token = null
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('user')
+                }
             })
     },
 })

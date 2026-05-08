@@ -67,8 +67,17 @@ router.get(
     (req, res) => {
         // On success — generate token and redirect to frontend
         const token = generateToken(req.user._id)
+        const user = encodeURIComponent(JSON.stringify({
+            _id: req.user._id,
+            name: req.user.name,
+            email: req.user.email,
+            role: req.user.role,
+            avatar: req.user.avatar,
+            isVerified: req.user.isVerified,
+        }))
+
         res.redirect(
-            `${process.env.CLIENT_URL}/auth/callback?token=${token}`
+            `${process.env.CLIENT_URL}/auth/callback?token=${token}&user=${user}`
         )
     }
 )

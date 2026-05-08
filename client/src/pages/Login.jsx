@@ -51,7 +51,6 @@ const Login = () => {
             )
         }
     }
-    console.log(result);
     return (
         <div className='min-h-screen bg-indigo-50 flex items-center
                     justify-center p-4 relative overflow-hidden'>

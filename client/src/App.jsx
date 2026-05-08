@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMe } from './features/auth/authSlice'
 
@@ -32,6 +32,9 @@ import MyCourses from './pages/student/MyCourses'
 function App() {
     const dispatch = useDispatch()
     const { token } = useSelector(s => s.auth)
+    const [isInverted, setIsInverted] = useState(() => {
+        return localStorage.getItem('invertMode') === 'true'
+    })
 
     // On app load — refresh user profile if token exists
     // This keeps user data fresh after page refresh
@@ -41,11 +44,22 @@ function App() {
         }
     }, [dispatch, token])
 
+    // Apply invert filter to document
+    useEffect(() => {
+        if (isInverted) {
+            document.documentElement.style.filter = 'invert(1)'
+            localStorage.setItem('invertMode', 'true')
+        } else {
+            document.documentElement.style.filter = 'invert(0)'
+            localStorage.setItem('invertMode', 'false')
+        }
+    }, [isInverted])
+
     return (
-        <div className='min-h-screen bg-indigo-50 flex flex-col'>
+        <div className='min-h-screen bg-indigo-50 flex flex-col' data-invert={isInverted}>
 
             {/* Navbar shows on every page */}
-            <Navbar />
+            <Navbar isInverted={isInverted} setIsInverted={setIsInverted} />
 
             {/* Main content area */}
             <main className='flex-1'>
