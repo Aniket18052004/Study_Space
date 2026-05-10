@@ -351,7 +351,7 @@ const Register = () => {
 
                     {/* Google OAuth */}
                     <a
-                        href='/api/auth/google'
+                        href={`${import.meta.env.VITE_API_URL}/api/auth/google`}
                         className='flex items-center justify-center gap-3 w-full border-2 border-indigo-200 rounded-xl py-2.5 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 transition-all'
                     >
                         <svg
