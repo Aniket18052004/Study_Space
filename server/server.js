@@ -19,12 +19,16 @@ import paymentRoutes from './routes/paymentRoutes.js'
 connectDB()
 
 const app = express()
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean)
 
 // ── Security middleware ────────────────────────────────────────
 app.use(helmet())
 
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 }))

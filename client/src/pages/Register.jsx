@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { registerUser, clearError } from '../features/auth/authSlice'
+import { API_BASE_URL } from '../config/api'
 
 const Register = () => {
     const dispatch = useDispatch()
@@ -351,7 +352,7 @@ const Register = () => {
 
                     {/* Google OAuth */}
                     <a
-                        href={`${import.meta.env.VITE_API_URL}/api/auth/google`}
+                        href={`${API_BASE_URL}/api/auth/google`}
                         className='flex items-center justify-center gap-3 w-full border-2 border-indigo-200 rounded-xl py-2.5 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 transition-all'
                     >
                         <svg

@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { API_BASE_URL } from '../config/api'
 
 // Create axios instance with base URL
 // In development: baseURL = 'http://localhost:5000'
 // In production: baseURL = 'https://study-space-server.onrender.com'
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+    baseURL: API_BASE_URL,
     withCredentials: true,
     timeout: 10000,
 })
