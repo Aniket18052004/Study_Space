@@ -198,7 +198,7 @@ const Login = () => {
 
 
                     <a
-                        href={`${API_BASE_URL}/api/auth/google`}
+                        href={`${API_BASE_URL}/api/auth/google/callback`}
                         className='flex items-center justify-center gap-3
                     w-full border-2 border-indigo-200 rounded-xl
                     py-2.5 text-sm font-semibold text-indigo-700
